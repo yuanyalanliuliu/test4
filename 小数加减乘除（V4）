@@ -1,0 +1,127 @@
+# include <stdio.h>
+# include <string.h> 
+
+
+int isoperator(char c)
+{
+	if(c=='+'||c=='-'||c=='*'||c=='/')
+	{
+		return 1;
+	}
+	else 
+	{
+		return 0;
+	}
+}
+void moveoperator(char *p)
+{
+	while(*p!='\0')
+	{
+		*p=*(p+1);
+		p++;
+	}
+}
+
+void moveoperand(float *p,float *end)
+{
+	while(p!=end)
+	{
+		*p=*(p+1);
+		p++;
+	}
+}
+
+
+int main()
+{
+	char strExp[]="1-2.5*4+10.2/5.1";
+	char operators[100]={'\0'};
+	float operands[100];
+
+	int operatorsIndex=0;
+	for(int i=0;i<strlen(strExp);i++)
+	{
+		if(isoperator(strExp[i]))
+		{
+			operators[operatorsIndex]=strExp[i];
+			operatorsIndex++;
+		}
+	}
+
+
+	int operandsIndex=0;
+	for(int i=0;i<strlen(strExp);i++)
+	{
+		char temp[100]={'\0'};
+		int tempIndex=0;
+		while(!isoperator(strExp[i]))
+		{
+			temp[tempIndex]=strExp[i];
+			i++;
+		}
+			printf("%s\n",temp);
+	}
+	for(int i=0;i<operandsIndex;i++)
+	{
+		printf("%0.lf\n",operands[i]);
+	}
+
+
+	char *poperator=operators;
+	float *poperand=operands;
+	while(*popeerator!='\0')
+	{
+		if(*poperator=='*')
+		{
+			float leftoperand=*poperand;
+			float rightoperand=*(poperand+1);
+			float res=leftoperand*rightoperand;
+			*poperand=res;
+			moveoperator(poperator);
+			moveoperand(poperand+1,&operands[operandsIndex--]);
+		}
+		else if(*poperator=='/')
+		{
+            float leftoperand=*poperand;
+			float rightoperand=*(poperand+1);
+			float res=leftoperand/rightoperand;
+			*poperand=res;
+			moveoperator(poperator);
+			moveoperand(poperand+1,&operands[operandsIndex--]);
+		}
+		}
+		else
+		{
+			poperator++;
+			poperand++;
+		}
+	}
+
+
+	 *poperator=operators;
+    *poperand=operands;
+	while(*popeerator!='\0')
+	{
+		if(*poperator=='+')
+		{
+			float leftoperand=*poperand;
+			float rightoperand=*(poperand+1);
+			float res=leftoperand+rightoperand;
+			*poperand=res;
+			moveoperator(poperator);
+			moveoperand(poperand+1,&operands[operandsIndex--]);
+		}
+		else if(*poperator=='-')
+		{
+            float leftoperand=*poperand;
+			float rightoperand=*(poperand+1);
+			float res=leftoperand-rightoperand;
+			*poperand=res;
+			moveoperator(poperator);
+			moveoperand(poperand+1,&operands[operandsIndex--]);
+		}
+	}
+
+	printf("%.2f\n",operands[0]);
+	return 0;
+}
